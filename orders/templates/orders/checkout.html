@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Checkout — Tienda Fein{% endblock %}
+{% block content %}
+<div class="container page-section">
+  <h1 class="section-title">Confirmar pedido</h1>
+  <p class="section-subtitle">Revisa tu pedido antes de confirmar</p>
+  <div class="row g-4 justify-content-center">
+    <div class="col-lg-7">
+      <div class="order-card mb-4">
+        <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem;">Detalle del pedido</h5>
+        {% for item in items %}
+        <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--light-gray);">
+          <div class="d-flex align-items-center gap-3">
+            {% if item.product.image %}<img src="{{ item.product.image.url }}" width="52" height="52" style="border-radius:6px;object-fit:cover;">
+            {% else %}<div style="width:52px;height:52px;background:var(--cream);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;">{% if item.product.category.slug == 'tazas' %}☕{% else %}🎨{% endif %}</div>{% endif %}
+            <div><div style="font-weight:600;">{{ item.product.name }}</div><div style="font-size:0.78rem;color:var(--mid-gray);">Cantidad: {{ item.quantity }}</div></div>
+          </div>
+          <strong class="text-terracotta">{{ item.subtotal_formatted }}</strong>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-between align-items-center pt-3">
+          <span style="font-weight:600;">Total</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--terracotta);">{{ total_formatted }}</span>
+        </div>
+      </div>
+      <div class="d-flex gap-3 mt-4">
+        <form method="post" action="{% url 'order_confirm' %}">{% csrf_token %}
+          <button type="submit" class="btn-fein" style="padding:0.85rem 2.5rem;"><i class="bi bi-check-circle me-2"></i>Confirmar pedido</button>
+        </form>
+        <a href="{% url 'cart_detail' %}" class="btn-dark-fein" style="padding:0.85rem 1.5rem;">Volver al carrito</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

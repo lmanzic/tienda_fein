@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Mis Pedidos — Tienda Fein{% endblock %}
+{% block content %}
+<div class="container page-section">
+  <h1 class="section-title">Mis pedidos</h1>
+  <p class="section-subtitle">Historial de tus compras</p>
+  {% if orders %}
+  <div class="row g-3">
+    {% for order in orders %}
+    <div class="col-12">
+      <div class="order-card d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div><div class="order-number" style="font-size:1.2rem;">Pedido #{{ order.id }}</div>
+        <div style="font-size:0.8rem;color:var(--mid-gray);">{{ order.created_at|date:"d/m/Y H:i" }} · {{ order.items.count }} producto{% if order.items.count != 1 %}s{% endif %}</div></div>
+        <span class="order-status-badge">{{ order.get_status_display }}</span>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--terracotta);">{{ order.total_formatted }}</div>
+        <a href="{% url 'order_detail' order.pk %}" class="btn-fein-outline" style="padding:0.4rem 1rem;font-size:0.85rem;">Ver detalle</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-state-icon">📋</div><h3>Sin pedidos aún</h3><a href="{% url 'catalog' %}" class="btn-fein mt-2">Ir al catálogo</a></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Tienda Fein{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="{% static 'css/fein.css' %}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'catalog' %}">Fein<span>.</span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalog' %}">Catálogo</a></li>
+        {% if user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'order_list' %}">Mis pedidos</a></li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav align-items-center gap-1">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cart_detail' %}">
+              <i class="bi bi-bag"></i>
+              {% if cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+            </a>
+          </li>
+          <li class="nav-item"><span class="nav-link text-muted" style="font-size:0.82rem;">{{ user.username }}</span></li>
+          {% if user.is_staff %}
+          <li class="nav-item"><a class="nav-link btn-admin-nav" href="{% url 'admin_products' %}"><i class="bi bi-gear"></i> Admin</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}" style="font-size:0.82rem;">Salir</a></li>
+        {% else %}
+          <li class="nav-item"><a class="btn-fein" href="{% url 'login' %}" style="padding:0.35rem 1.1rem;font-size:0.85rem;">Iniciar sesión</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% if messages %}
+<div class="container messages-container">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+    {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill"></i>
+    {% elif message.tags == 'error' %}<i class="bi bi-exclamation-circle-fill"></i>
+    {% else %}<i class="bi bi-info-circle-fill"></i>{% endif %}
+    {{ message }}
+    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<footer class="fein-footer">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <div class="brand mb-1">Fein.</div>
+        <div>Tazas y estuches con diseño único · Santiago, Chile</div>
+      </div>
+      <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <a href="https://instagram.com/_tienda_fein_" target="_blank"><i class="bi bi-instagram"></i> @_tienda_fein_</a>
+        <span class="ms-3">© 2024 Tienda Fein</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

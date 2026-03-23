@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}Pedido #{{ order.id }} — Tienda Fein{% endblock %}
+{% block content %}
+<div class="container page-section">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="order-card text-center mb-4">
+        <div class="success-icon">🎉</div>
+        <h2 style="font-family:'Playfair Display',serif;">¡Pedido confirmado!</h2>
+        <p style="color:var(--mid-gray);">Gracias por tu compra. Te contactaremos por Instagram.</p>
+        <div class="order-number">Pedido #{{ order.id }}</div>
+        <span class="order-status-badge mt-2 d-inline-block">{{ order.get_status_display }}</span>
+      </div>
+      <div class="order-card">
+        <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem;">Productos comprados</h5>
+        {% for item in order.items.all %}
+        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--light-gray);">
+          <div><div style="font-weight:600;">{{ item.product_name }}</div><div style="font-size:0.78rem;color:var(--mid-gray);">{{ item.quantity }} × ${{ item.price }}</div></div>
+          <strong class="text-terracotta">{{ item.subtotal_formatted }}</strong>
+        </div>
+        {% endfor %}
+        <div class="d-flex justify-content-between pt-3">
+          <span style="font-weight:600;">Total</span>
+          <span style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--terracotta);">{{ order.total_formatted }}</span>
+        </div>
+      </div>
+      <div class="d-flex gap-3 mt-4 justify-content-center">
+        <a href="{% url 'catalog' %}" class="btn-fein" style="padding:0.75rem 2rem;">Seguir comprando</a>
+        <a href="{% url 'order_list' %}" class="btn-fein-outline" style="padding:0.7rem 1.5rem;">Mis pedidos</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Iniciar Sesión — Tienda Fein{% endblock %}
+{% block content %}
+<div class="login-wrapper">
+  <div class="container">
+    <div class="login-card">
+      <div class="login-logo">Fein.</div>
+      <div class="login-tagline">Diseño único · Hecho con alma</div>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Usuario</label>
+          <input type="text" name="username" class="form-control" placeholder="Tu usuario" autofocus value="{{ form.username.value|default:'' }}">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Contraseña</label>
+          <input type="password" name="password" class="form-control" placeholder="••••••••">
+          {% if form.non_field_errors %}
+          <div style="color:var(--terracotta);font-size:0.82rem;margin-top:0.4rem;"><i class="bi bi-exclamation-circle me-1"></i>{{ form.non_field_errors.0 }}</div>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn-fein w-100 text-center" style="padding:0.8rem;">Ingresar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — Fein{% endblock %}
+{% block content %}
+<div class="admin-page-header">
+  <div class="container">
+    <h1><i class="bi bi-box-seam me-2"></i>{{ title }}</h1>
+    <p><a href="{% url 'admin_products' %}" style="color:rgba(255,255,255,0.5);text-decoration:none;">← Volver a productos</a></p>
+  </div>
+</div>
+<div class="container pb-5">
+  <div class="fein-form-card" style="max-width:640px;">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="mb-4">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}{% for error in field.errors %}<div class="text-danger mt-1" style="font-size:0.82rem;"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>{% endfor %}{% endif %}
+      </div>
+      {% endfor %}
+      <hr class="divider">
+      <div class="d-flex gap-3">
+        <button type="submit" class="btn-fein" style="padding:0.7rem 2rem;"><i class="bi bi-check-lg me-1"></i>{% if product %}Guardar cambios{% else %}Crear producto{% endif %}</button>
+        <a href="{% url 'admin_products' %}" class="btn-dark-fein" style="padding:0.7rem 1.5rem;">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

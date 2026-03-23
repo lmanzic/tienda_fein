@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Gestión de Productos — Fein{% endblock %}
+{% block content %}
+<div class="admin-page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <div><h1><i class="bi bi-box-seam me-2"></i>Gestión de Productos</h1>
+      <p>{{ products.count }} producto{% if products.count != 1 %}s{% endif %} en el catálogo</p></div>
+      <a href="{% url 'product_create' %}" class="btn-fein" style="padding:0.65rem 1.5rem;"><i class="bi bi-plus-lg me-1"></i> Nuevo producto</a>
+    </div>
+  </div>
+</div>
+<div class="container pb-5">
+  {% if products %}
+  <div class="admin-table">
+    <table class="table mb-0">
+      <thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-3">
+              {% if product.image %}<img src="{{ product.image.url }}" width="48" height="48" style="border-radius:6px;object-fit:cover;">
+              {% else %}<div style="width:48px;height:48px;border-radius:6px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:1.4rem;">{% if product.category.slug == 'tazas' %}☕{% else %}🎨{% endif %}</div>{% endif %}
+              <div><div style="font-weight:600;">{{ product.name }}</div><div style="font-size:0.78rem;color:var(--mid-gray);">{{ product.description|truncatechars:50 }}</div></div>
+            </div>
+          </td>
+          <td>{{ product.category.name }}</td>
+          <td><strong class="text-terracotta">{{ product.get_price_formatted }}</strong></td>
+          <td>{% if product.available %}<span class="badge-available"><i class="bi bi-check-circle me-1"></i>Activo</span>
+          {% else %}<span class="badge-unavailable"><i class="bi bi-x-circle me-1"></i>Inactivo</span>{% endif %}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <a href="{% url 'product_edit' product.pk %}" class="btn-fein-outline" style="padding:0.3rem 0.8rem;font-size:0.8rem;"><i class="bi bi-pencil"></i> Editar</a>
+              <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm" style="border:1.5px solid #dc354544;color:#dc3545;border-radius:var(--radius-sm);font-size:0.8rem;padding:0.3rem 0.8rem;"><i class="bi bi-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-state-icon">📦</div><h3>Sin productos aún</h3><a href="{% url 'product_create' %}" class="btn-fein mt-2">Crear producto</a></div>
+  {% endif %}
+</div>
+{% endblock %}

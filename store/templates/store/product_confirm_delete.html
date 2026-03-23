@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Producto — Fein{% endblock %}
+{% block content %}
+<div class="container page-section">
+  <div class="fein-form-card text-center" style="max-width:480px;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🗑️</div>
+    <h2 class="fein-form-title">¿Eliminar producto?</h2>
+    <p class="text-muted">Estás a punto de eliminar:</p>
+    <p style="font-weight:700;font-size:1.1rem;">{{ product.name }}</p>
+    <p class="text-muted" style="font-size:0.85rem;">Esta acción no se puede deshacer.</p>
+    <hr class="divider">
+    <div class="d-flex gap-3 justify-content-center">
+      <form method="post">{% csrf_token %}
+        <button type="submit" class="btn btn-danger" style="border-radius:var(--radius-sm);padding:0.6rem 1.5rem;font-size:0.88rem;"><i class="bi bi-trash me-1"></i>Sí, eliminar</button>
+      </form>
+      <a href="{% url 'admin_products' %}" class="btn-dark-fein" style="padding:0.6rem 1.5rem;">Cancelar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

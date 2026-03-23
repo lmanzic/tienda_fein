@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Carrito — Tienda Fein{% endblock %}
+{% block content %}
+<div class="container page-section">
+  <h1 class="section-title"><i class="bi bi-bag me-2"></i>Tu carrito</h1>
+  <p class="section-subtitle">{% if items %}{{ items.count }} producto{% if items.count != 1 %}s{% endif %}{% else %}Vacío{% endif %}</p>
+  {% if items %}
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="cart-table">
+        <table class="table mb-0">
+          <thead><tr><th>Producto</th><th class="text-center">Cantidad</th><th class="text-end">Subtotal</th><th></th></tr></thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  {% if item.product.image %}<img src="{{ item.product.image.url }}" class="cart-product-img">
+                  {% else %}<div class="cart-product-no-img">{% if item.product.category.slug == 'tazas' %}☕{% else %}🎨{% endif %}</div>{% endif %}
+                  <div><div style="font-weight:600;">{{ item.product.name }}</div><div style="font-size:0.78rem;color:var(--mid-gray);">{{ item.product.get_price_formatted }} c/u</div></div>
+                </div>
+              </td>
+              <td class="text-center">
+                <form method="post" action="{% url 'cart_update' item.id %}" class="d-inline-flex align-items-center gap-2">
+                  {% csrf_token %}
+                  <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="99" class="qty-input">
+                  <button type="submit" class="btn-fein-outline" style="padding:0.28rem 0.7rem;font-size:0.78rem;"><i class="bi bi-arrow-clockwise"></i></button>
+                </form>
+              </td>
+              <td class="text-end"><strong class="text-terracotta">{{ item.subtotal_formatted }}</strong></td>
+              <td class="text-end">
+                <form method="post" action="{% url 'cart_remove' item.id %}">{% csrf_token %}
+                  <button type="submit" style="color:var(--mid-gray);border:none;background:none;font-size:1.1rem;"><i class="bi bi-x-lg"></i></button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="cart-total-box">
+        <h5 style="font-family:'Playfair Display',serif;margin-bottom:1.5rem;">Resumen</h5>
+        {% for item in items %}
+        <div class="d-flex justify-content-between mb-2" style="font-size:0.85rem;color:var(--mid-gray);">
+          <span>{{ item.product.name }} ×{{ item.quantity }}</span><span>{{ item.subtotal_formatted }}</span>
+        </div>
+        {% endfor %}
+        <hr class="divider">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="cart-total-label">Total</span>
+          <span class="cart-total-value">{{ total_formatted }}</span>
+        </div>
+        <a href="{% url 'checkout' %}" class="btn-fein w-100 text-center" style="padding:0.85rem;display:block;"><i class="bi bi-credit-card me-2"></i>Ir al checkout</a>
+        <a href="{% url 'catalog' %}" class="btn-dark-fein w-100 text-center mt-2" style="padding:0.75rem;display:block;">Seguir comprando</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-state-icon">🛍️</div><h3>Tu carrito está vacío</h3><p>¡Explora el catálogo!</p><a href="{% url 'catalog' %}" class="btn-fein mt-2">Ver catálogo</a></div>
+  {% endif %}
+</div>
+{% endblock %}
